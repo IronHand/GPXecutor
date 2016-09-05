@@ -18,9 +18,10 @@ namespace GPXecutor
             public DateTime time;
         };
 
+        public string last_loaded_gpx_name = "";
+
         public List<gpx_trkpt> load_gpx_to_list(string file_path)
         {
-
             XmlReaderSettings reader_settings = new XmlReaderSettings();
             reader_settings.IgnoreWhitespace = true;
             XmlReader reader = XmlReader.Create(file_path, reader_settings);
@@ -40,7 +41,8 @@ namespace GPXecutor
                     case XmlNodeType.Element:
                         if (reader.Name == "name")
                         {
-
+                            reader.Read();
+                            last_loaded_gpx_name = reader.Value;
                         }
                         else if (reader.Name == "desc")
                         {
@@ -109,5 +111,32 @@ namespace GPXecutor
             return pt_list;
         }
 
+        public void save_list_to_gpx(List<gpx_trkpt> pt_list, string file_path)
+        {
+            XmlWriterSettings writer_settings = new XmlWriterSettings();
+            writer_settings.Indent = true;
+            XmlWriter writer = XmlWriter.Create(file_path, writer_settings);
+
+            writer.WriteStartDocument();
+            writer.WriteStartElement("trk");
+            writer.WriteStartElement("trkseg");
+
+            foreach (gpx_trkpt point in pt_list)
+            {
+                writer.WriteStartElement("trkpt");
+                writer.WriteAttributeString("lat", point.lat.ToString().Replace(",", "."));
+                writer.WriteAttributeString("lon", point.lon.ToString().Replace(",", "."));
+                writer.WriteElementString("ele", point.ele.ToString().Replace(",", "."));
+                writer.WriteElementString("speed", point.speed.ToString().Replace(",", "."));
+                writer.WriteElementString("time", point.time.ToString("yyyy-MM-ddTHH:mm:ss") + "Z");
+
+                writer.WriteEndElement();
+            }
+
+            writer.WriteEndElement();
+            writer.WriteEndDocument();
+
+            writer.Close();
+        }
     }
 }

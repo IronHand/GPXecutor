@@ -18,6 +18,9 @@ namespace GPXecutor
 
         gpx_master gpx_tool = new gpx_master();
 
+        List<gpx_master.gpx_trkpt> pt_list;
+        string list_name;
+
         Point track_offset = new Point(0, 0);
         Point mouse_diff = new Point(0, 0);
         int last_zoom_fak = 1000;
@@ -100,7 +103,6 @@ namespace GPXecutor
 
         }
 
-        List<gpx_master.gpx_trkpt> pt_list;
         private void öffnenToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
@@ -108,10 +110,19 @@ namespace GPXecutor
 
             if (ofd.FileName != "")
             {
-                pt_list = gpx_tool.load_gpx_to_list(ofd.FileName);
-                fill_dataView(pt_list);
-                draw_track(pt_list);
+                load_gpx_xml(ofd.FileName);
             }
+        }
+
+        private void load_gpx_xml(string file_path)
+        {
+            pt_list = gpx_tool.load_gpx_to_list(file_path);
+            list_name = gpx_tool.last_loaded_gpx_name;
+
+            this.Text = "GPXecutor" + " - " + list_name;
+
+            fill_dataView(pt_list);
+            draw_track(pt_list);
         }
 
         //Track Box Controlls
@@ -200,6 +211,17 @@ namespace GPXecutor
         private void track_box_MouseEnter(object sender, EventArgs e)
         {
             track_box.Focus();
+        }
+
+        private void speichernToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.ShowDialog();
+
+            if (sfd.FileName != "")
+            {
+                gpx_tool.save_list_to_gpx(pt_list, sfd.FileName);
+            }
         }
 
     }
