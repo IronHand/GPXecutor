@@ -118,6 +118,7 @@ namespace GPXecutor
             XmlWriter writer = XmlWriter.Create(file_path, writer_settings);
 
             writer.WriteStartDocument();
+            writer.WriteStartElement("gpx");
             writer.WriteStartElement("trk");
             writer.WriteStartElement("trkseg");
 
@@ -133,6 +134,8 @@ namespace GPXecutor
                 writer.WriteEndElement();
             }
 
+            writer.WriteEndElement();
+            writer.WriteEndElement();
             writer.WriteEndElement();
             writer.WriteEndDocument();
 

@@ -16,3 +16,12 @@ D:\Dropbox\GBS\VS\GPXecutor\GPXecutor\obj\x86\Debug\GPXecutor.Form1.resources
 D:\Dropbox\GBS\VS\GPXecutor\GPXecutor\obj\x86\Debug\GPXecutor.Properties.Resources.resources
 D:\Dropbox\GBS\VS\GPXecutor\GPXecutor\obj\x86\Debug\GPXecutor.time_change.resources
 D:\Dropbox\GBS\VS\GPXecutor\GPXecutor\obj\x86\Debug\GPXecutor.csproj.GenerateResource.Cache
+C:\Users\Kay\Documents\GitHub\GPXecutor\GPXecutor\obj\x86\Debug\GPXecutor.exe
+C:\Users\Kay\Documents\GitHub\GPXecutor\GPXecutor\obj\x86\Debug\GPXecutor.pdb
+C:\Users\Kay\Documents\GitHub\GPXecutor\GPXecutor\bin\Debug\GPXecutor.exe
+C:\Users\Kay\Documents\GitHub\GPXecutor\GPXecutor\bin\Debug\GPXecutor.pdb
+C:\Users\Kay\Documents\GitHub\GPXecutor\GPXecutor\obj\x86\Debug\GPXecutor.csprojResolveAssemblyReference.cache
+C:\Users\Kay\Documents\GitHub\GPXecutor\GPXecutor\obj\x86\Debug\GPXecutor.Form1.resources
+C:\Users\Kay\Documents\GitHub\GPXecutor\GPXecutor\obj\x86\Debug\GPXecutor.Properties.Resources.resources
+C:\Users\Kay\Documents\GitHub\GPXecutor\GPXecutor\obj\x86\Debug\GPXecutor.time_change.resources
+C:\Users\Kay\Documents\GitHub\GPXecutor\GPXecutor\obj\x86\Debug\GPXecutor.csproj.GenerateResource.Cache
