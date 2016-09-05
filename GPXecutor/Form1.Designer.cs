@@ -83,7 +83,7 @@
             // speichernToolStripMenuItem
             // 
             this.speichernToolStripMenuItem.Name = "speichernToolStripMenuItem";
-            this.speichernToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.speichernToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
             this.speichernToolStripMenuItem.Text = "Speichern";
             this.speichernToolStripMenuItem.Click += new System.EventHandler(this.speichernToolStripMenuItem_Click);
             // 
@@ -118,6 +118,8 @@
             this.dataPointView.Name = "dataPointView";
             this.dataPointView.Size = new System.Drawing.Size(497, 522);
             this.dataPointView.TabIndex = 1;
+            this.dataPointView.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataPointView_RowEnter);
+            this.dataPointView.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.dataPointView_UserDeletingRow);
             // 
             // point
             // 

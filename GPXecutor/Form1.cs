@@ -23,8 +23,10 @@ namespace GPXecutor
 
         Point track_offset = new Point(0, 0);
         Point mouse_diff = new Point(0, 0);
-        int last_zoom_fak = 1000;
         int zoom_fak = 1000;
+        double last_player_lat = 0;
+        double last_player_lon = 0;
+
 
         private void fill_dataView(List<gpx_master.gpx_trkpt> pt_list, bool add_to_list = false)
         {
@@ -53,6 +55,30 @@ namespace GPXecutor
             dataPointView.Rows.AddRange(new_row_list);
         }
 
+        private PointF convert_angles_to_xy(double lat, double lon)
+        {
+            PointF new_xy_point = new PointF(0, 0);
+
+            float R = 6378137;
+
+            float x = (float)(R * Math.Cos(lat) * Math.Cos(lon));
+            float y = -(float)(R * Math.Cos(lat) * Math.Sin(lon));
+            float z = (float)(R * Math.Sin(lat));
+
+            int focal_length = zoom_fak;//Convert.ToInt32(numericUpDown1.Value);
+
+            float projected_x = x * focal_length / (focal_length + z);
+            float projected_y = y * focal_length / (focal_length + z);
+
+            projected_x -= (float)Convert.ToDouble(focal_length * -0.121) - 500;
+            projected_y -= (float)Convert.ToDouble(focal_length * 2.23) - 50;
+
+            new_xy_point.X = projected_x;
+            new_xy_point.Y = projected_y;
+
+            return new_xy_point;
+        }
+
         private void draw_track(List<gpx_master.gpx_trkpt> pt_list)
         {
             if (pt_list == null)
@@ -67,30 +93,14 @@ namespace GPXecutor
             PointF last_point = new PointF(0,0);
             int p_count = 0;
 
-            //point_list[0] = new PointF(0, 0);
-
             foreach (gpx_master.gpx_trkpt point in pt_list)
             {
-                float R = 6378137;
+                PointF xy_point = convert_angles_to_xy(point.lat, point.lon);
 
-                float x = -(float)(R * Math.Cos(point.lat) * Math.Cos(point.lon));
-                float y = -(float)(R * Math.Cos(point.lat) * Math.Sin(point.lon));
-                float z = (float)(R * Math.Sin(point.lat));
+                xy_point.X -= track_offset.X + mouse_diff.X;
+                xy_point.Y -= track_offset.Y + mouse_diff.Y;
 
-                int focal_length = zoom_fak;//Convert.ToInt32(numericUpDown1.Value);
-
-                float projected_x = x * focal_length / (focal_length + z);
-                float projected_y = y * focal_length / (focal_length + z);
-
-                projected_x -= (float)Convert.ToDouble(focal_length * 0.121);
-                projected_y -= (float)Convert.ToDouble(focal_length * 2.255);
-
-                projected_x -= track_offset.X + mouse_diff.X;
-                projected_y -= track_offset.Y + mouse_diff.Y;
-
-
-                PointF p = new PointF(projected_x, projected_y);
-                point_list[p_count] = p;
+                point_list[p_count] = xy_point;
                 p_count++;
             }
 
@@ -100,7 +110,27 @@ namespace GPXecutor
             g.Dispose();
 
             track_box.Image = bmp;
+        }
 
+        private void draw_single_point(double lat, double lon)
+        {
+            Bitmap bmp = (Bitmap)track_box.Image;
+
+            if (bmp != null)
+            {
+                Graphics g = Graphics.FromImage(bmp);
+                Pen pen = new Pen(Color.Black, 1.0f);
+
+                PointF xy_point = convert_angles_to_xy(lat, lon);
+
+                xy_point.X -= track_offset.X + mouse_diff.X;
+                xy_point.Y -= track_offset.Y + mouse_diff.Y;
+
+                g.DrawEllipse(pen, xy_point.X - 10, xy_point.Y - 10, 20, 20);
+                g.Dispose();
+
+                track_box.Image = bmp;
+            }
         }
 
         private void öffnenToolStripMenuItem_Click(object sender, EventArgs e)
@@ -155,6 +185,7 @@ namespace GPXecutor
             {
                 mouse_diff = new Point(last_mouse_pos.X - MousePosition.X, last_mouse_pos.Y - MousePosition.Y);
                 draw_track(pt_list);
+                draw_single_point(last_player_lat, last_player_lon);
             }
             else
             {
@@ -172,7 +203,11 @@ namespace GPXecutor
                 zoom_fak -= 1000;
             }
 
+            mouse_diff.X = 0;
+            mouse_diff.Y = 0;
+
             draw_track(pt_list);
+            draw_single_point(last_player_lat, last_player_lon);
         }
 
         private void centerToolStripMenuItem_Click(object sender, EventArgs e)
@@ -186,6 +221,7 @@ namespace GPXecutor
             draw_track(pt_list);
         }
 
+        //Bearbeiten Tool Menü---------------------------------------------------------------------------------------
         private void zeitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             time_change tc = new time_change();
@@ -207,6 +243,7 @@ namespace GPXecutor
                 fill_dataView(pt_list);
             }
         }
+        //-------------------------------------------------------------------------------------------------------------
 
         private void track_box_MouseEnter(object sender, EventArgs e)
         {
@@ -222,6 +259,25 @@ namespace GPXecutor
             {
                 gpx_tool.save_list_to_gpx(pt_list, sfd.FileName);
             }
+        }
+
+        //Data Grid View----------------------------------------------------------------------------------------------------------------------------------------------------
+        private void dataPointView_RowEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            last_player_lat = Convert.ToDouble(dataPointView.Rows[e.RowIndex].Cells[4].Value);
+            last_player_lon = Convert.ToDouble(dataPointView.Rows[e.RowIndex].Cells[5].Value);
+
+            mouse_diff.X = 0;
+            mouse_diff.Y = 0;
+
+            draw_track(pt_list);
+            draw_single_point(last_player_lat, last_player_lon);
+        }
+
+        private void dataPointView_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
+        {
+            gpx_master.gpx_trkpt removed_point = pt_list.Find(x => x.id.Equals(Convert.ToInt32(e.Row.Cells[0].Value)));
+            pt_list.Remove(removed_point);
         }
 
     }
