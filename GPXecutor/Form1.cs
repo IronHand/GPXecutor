@@ -27,6 +27,10 @@ namespace GPXecutor
         double last_player_lat = 0;
         double last_player_lon = 0;
 
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            //dataPointView.VirtualMode = true;
+        }
 
         private void fill_dataView(List<gpx_master.gpx_trkpt> pt_list, bool add_to_list = false)
         {
@@ -79,6 +83,7 @@ namespace GPXecutor
             return new_xy_point;
         }
 
+        //Drawing Functions-------------------------------------------------------------------------
         private void draw_track(List<gpx_master.gpx_trkpt> pt_list)
         {
             if (pt_list == null)
@@ -133,6 +138,31 @@ namespace GPXecutor
             }
         }
 
+        private void draw_elevation(List<gpx_master.gpx_trkpt> pt_list)
+        {
+            if (pt_list == null)
+            {
+                return;
+            }
+            Bitmap bmp = new Bitmap(alt_pictureBox.Width, alt_pictureBox.Height);
+            Graphics g = Graphics.FromImage(bmp);
+            Pen pen = new Pen(Color.Black, 1.0f);
+
+            PointF[] point_list = new PointF[pt_list.Count];
+            int p_count = 0;
+
+            foreach (gpx_master.gpx_trkpt point in pt_list)
+            {
+                point_list[p_count] = new PointF(p_count, (float)point.ele / 10);
+                p_count++;
+            }
+
+            g.Clear(Color.LightGray);
+            g.DrawLines(pen, point_list);
+
+            alt_pictureBox.Image = bmp;
+        }
+        //-------------------------------------------------------------------------------------------
         private void öffnenToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
@@ -153,6 +183,8 @@ namespace GPXecutor
 
             fill_dataView(pt_list);
             draw_track(pt_list);
+
+            draw_elevation(pt_list);
         }
 
         //Track Box Controlls
@@ -272,13 +304,36 @@ namespace GPXecutor
 
             draw_track(pt_list);
             draw_single_point(last_player_lat, last_player_lon);
+
+            dataPointView.Rows[e.RowIndex].Selected = true;
         }
 
         private void dataPointView_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
         {
+            for (int i = 0; i < 6; i++)
+            {
+                dataPointView.Columns[i].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            }
+
             gpx_master.gpx_trkpt removed_point = pt_list.Find(x => x.id.Equals(Convert.ToInt32(e.Row.Cells[0].Value)));
             pt_list.Remove(removed_point);
+
+            after_del_timer.Enabled = true;
         }
 
+        private void dataPointView_MouseEnter(object sender, EventArgs e)
+        {
+            dataPointView.Focus();
+        }
+
+        private void after_del_timer_Tick(object sender, EventArgs e)
+        {
+            dataPointView.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            dataPointView.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            dataPointView.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            dataPointView.Columns[3].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            dataPointView.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            dataPointView.Columns[5].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+        }
     }
 }

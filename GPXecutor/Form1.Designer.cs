@@ -46,11 +46,14 @@
             this.track_box = new System.Windows.Forms.PictureBox();
             this.track_contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.centerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.after_del_timer = new System.Windows.Forms.Timer(this.components);
+            this.alt_pictureBox = new System.Windows.Forms.PictureBox();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataPointView)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.track_box)).BeginInit();
             this.track_contextMenuStrip.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.alt_pictureBox)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -120,6 +123,7 @@
             this.dataPointView.TabIndex = 1;
             this.dataPointView.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataPointView_RowEnter);
             this.dataPointView.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.dataPointView_UserDeletingRow);
+            this.dataPointView.MouseEnter += new System.EventHandler(this.dataPointView_MouseEnter);
             // 
             // point
             // 
@@ -168,6 +172,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.alt_pictureBox);
             this.panel1.Controls.Add(this.track_box);
             this.panel1.Location = new System.Drawing.Point(515, 27);
             this.panel1.Name = "panel1";
@@ -208,6 +213,21 @@
             this.centerToolStripMenuItem.Text = "Center";
             this.centerToolStripMenuItem.Click += new System.EventHandler(this.centerToolStripMenuItem_Click);
             // 
+            // after_del_timer
+            // 
+            this.after_del_timer.Tick += new System.EventHandler(this.after_del_timer_Tick);
+            // 
+            // alt_pictureBox
+            // 
+            this.alt_pictureBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.alt_pictureBox.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.alt_pictureBox.Location = new System.Drawing.Point(3, 387);
+            this.alt_pictureBox.Name = "alt_pictureBox";
+            this.alt_pictureBox.Size = new System.Drawing.Size(473, 130);
+            this.alt_pictureBox.TabIndex = 1;
+            this.alt_pictureBox.TabStop = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -219,12 +239,14 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "GPXecutor";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataPointView)).EndInit();
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.track_box)).EndInit();
             this.track_contextMenuStrip.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.alt_pictureBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -249,6 +271,8 @@
         private System.Windows.Forms.ToolStripMenuItem zeitToolStripMenuItem;
         private System.Windows.Forms.ContextMenuStrip track_contextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem centerToolStripMenuItem;
+        private System.Windows.Forms.Timer after_del_timer;
+        private System.Windows.Forms.PictureBox alt_pictureBox;
     }
 }
 
