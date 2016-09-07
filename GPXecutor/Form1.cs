@@ -29,6 +29,8 @@ namespace GPXecutor
         double last_player_lon = 0;
         double last_player_ele = 0;
 
+        Bitmap elevation_line;
+
         private void Form1_Load(object sender, EventArgs e)
         {
             //dataPointView.VirtualMode = true;
@@ -44,6 +46,8 @@ namespace GPXecutor
             DataGridViewRow[] new_row_list = new DataGridViewRow[pt_list.Count];
             DataGridViewRowCollection row_collection = new DataGridViewRowCollection(dataPointView);
 
+            int point_count = 0;
+
             foreach (gpx_master.gpx_trkpt point in pt_list)
             {
                 DataGridViewRow new_row = new DataGridViewRow();
@@ -55,7 +59,9 @@ namespace GPXecutor
                 new_row.Cells.Add(new DataGridViewTextBoxCell { Value = point.lat });
                 new_row.Cells.Add(new DataGridViewTextBoxCell { Value = point.lon });
 
-                new_row_list[point.id - 1] = new_row;
+                new_row_list[point_count] = new_row;
+
+                point_count++;
             }
 
             dataPointView.Rows.AddRange(new_row_list);
@@ -155,29 +161,29 @@ namespace GPXecutor
 
             foreach (gpx_master.gpx_trkpt point in pt_list)
             {
-                point_list[p_count] = new PointF(((float)p_count / point_list.Count()) * alt_pictureBox.Width, (float)(alt_pictureBox.Height -((point.ele / track_statistic_infos.max_ele) * alt_pictureBox.Height)));
+                point_list[p_count] = new PointF(((float)p_count / point_list.Count()) * alt_pictureBox.Width, (float)(alt_pictureBox.Height - (((point.ele - track_statistic_infos.min_ele) / (track_statistic_infos.max_ele - track_statistic_infos.min_ele)) * alt_pictureBox.Height)));
                 p_count++;
             }
 
             g.Clear(Color.LightGray);
             g.DrawLines(pen, point_list);
 
-            alt_pictureBox.Image = bmp;
+            elevation_line = bmp;
 
-            //draw_elevation_marker();
+            alt_pictureBox.Image = bmp;
         }
 
         private void draw_elevation_marker()
         {
             try
             {
-                if (alt_pictureBox.Image != null)
+                if (elevation_line != null)
                 {
-                    Bitmap bmp = (Bitmap)alt_pictureBox.Image;
+                    Bitmap bmp = (Bitmap)elevation_line.Clone();
                     Graphics g = Graphics.FromImage(bmp);
                     Pen pen = new Pen(Color.Red, 1.0f);
 
-                    g.DrawRectangle(pen, dataPointView.SelectedRows[0].Index, 0, 1, alt_pictureBox.Height);
+                    g.DrawRectangle(pen, ((float)dataPointView.SelectedRows[0].Index / dataPointView.Rows.Count) * alt_pictureBox.Width, 0, 1, alt_pictureBox.Height);
 
                     alt_pictureBox.Image = bmp;
                 }
@@ -351,7 +357,7 @@ namespace GPXecutor
             draw_track(pt_list);
             draw_single_point(last_player_lat, last_player_lon);
 
-            draw_elevation(pt_list);
+            draw_elevation_marker();
 
             dataPointView.Rows[e.RowIndex].Selected = true;
         }
@@ -382,6 +388,11 @@ namespace GPXecutor
             dataPointView.Columns[3].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             dataPointView.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             dataPointView.Columns[5].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+
+            calc_statistics();
+
+            draw_elevation(pt_list);
+            draw_elevation_marker();
         }
 
     }
