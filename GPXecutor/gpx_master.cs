@@ -15,7 +15,17 @@ namespace GPXecutor
             public double lon;
             public double ele;
             public double speed;
+            public double speed_in_kmh;
             public DateTime time;
+        };
+
+        public struct track_stats
+        {
+            public double max_ele;
+            public double min_ele;
+            public double max_speed;
+            public TimeSpan total_time;
+            public TimeSpan motion_time;
         };
 
         public string last_loaded_gpx_name = "";
@@ -88,6 +98,7 @@ namespace GPXecutor
                                 reader.Read();
                                 string reader_v = reader.Value.Replace(".", ",");
                                 add_new_point.speed = Convert.ToDouble(reader_v);
+                                add_new_point.speed_in_kmh = add_new_point.speed * 3.6;
                             }
                         }
                         else if (reader.Name == "time")
@@ -140,6 +151,47 @@ namespace GPXecutor
             writer.WriteEndDocument();
 
             writer.Close();
+        }
+
+        public track_stats get_track_statistics(List<gpx_trkpt> pt_list)
+        {
+            track_stats stats = new track_stats();
+            stats.max_ele = 0;
+            stats.min_ele = 1000000;
+            stats.max_speed = 0;
+            stats.total_time = new TimeSpan();
+            stats.motion_time = new TimeSpan();
+
+            DateTime last_time = pt_list[0].time;
+
+            foreach (gpx_trkpt point in pt_list)
+            {
+                if (point.ele > stats.max_ele)
+                {
+                    stats.max_ele = point.ele;
+                }
+
+                if (point.ele < stats.min_ele)
+                {
+                    stats.min_ele = point.ele;
+                }
+
+                if (point.speed > stats.max_speed)
+                {
+                    stats.max_speed = point.speed;
+                }
+
+                stats.total_time += point.time - last_time;
+
+                if (point.speed > 0)
+                {
+                    stats.motion_time += point.time - last_time;
+                }
+
+                last_time = point.time;
+            }
+
+            return stats;
         }
     }
 }

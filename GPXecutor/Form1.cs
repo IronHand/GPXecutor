@@ -19,6 +19,7 @@ namespace GPXecutor
         gpx_master gpx_tool = new gpx_master();
 
         List<gpx_master.gpx_trkpt> pt_list;
+        gpx_master.track_stats track_statistic_infos;
         string list_name;
 
         Point track_offset = new Point(0, 0);
@@ -26,6 +27,7 @@ namespace GPXecutor
         int zoom_fak = 1000;
         double last_player_lat = 0;
         double last_player_lon = 0;
+        double last_player_ele = 0;
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -146,14 +148,14 @@ namespace GPXecutor
             }
             Bitmap bmp = new Bitmap(alt_pictureBox.Width, alt_pictureBox.Height);
             Graphics g = Graphics.FromImage(bmp);
-            Pen pen = new Pen(Color.Black, 1.0f);
+            Pen pen = new Pen(Color.Black, 3.0f);
 
             PointF[] point_list = new PointF[pt_list.Count];
             int p_count = 0;
 
             foreach (gpx_master.gpx_trkpt point in pt_list)
             {
-                point_list[p_count] = new PointF(p_count, (float)point.ele / 10);
+                point_list[p_count] = new PointF(((float)p_count / point_list.Count()) * alt_pictureBox.Width, (float)(alt_pictureBox.Height -((point.ele / track_statistic_infos.max_ele) * alt_pictureBox.Height)));
                 p_count++;
             }
 
@@ -161,7 +163,30 @@ namespace GPXecutor
             g.DrawLines(pen, point_list);
 
             alt_pictureBox.Image = bmp;
+
+            //draw_elevation_marker();
         }
+
+        private void draw_elevation_marker()
+        {
+            try
+            {
+                if (alt_pictureBox.Image != null)
+                {
+                    Bitmap bmp = (Bitmap)alt_pictureBox.Image;
+                    Graphics g = Graphics.FromImage(bmp);
+                    Pen pen = new Pen(Color.Red, 1.0f);
+
+                    g.DrawRectangle(pen, dataPointView.SelectedRows[0].Index, 0, 1, alt_pictureBox.Height);
+
+                    alt_pictureBox.Image = bmp;
+                }
+            }
+            catch
+            {
+            }
+        }
+
         //-------------------------------------------------------------------------------------------
         private void öffnenToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -178,6 +203,7 @@ namespace GPXecutor
         {
             pt_list = gpx_tool.load_gpx_to_list(file_path);
             list_name = gpx_tool.last_loaded_gpx_name;
+            calc_statistics();
 
             this.Text = "GPXecutor" + " - " + list_name;
 
@@ -186,6 +212,25 @@ namespace GPXecutor
 
             draw_elevation(pt_list);
         }
+
+        private void calc_statistics()
+        {
+            track_statistic_infos = gpx_tool.get_track_statistics(pt_list);
+
+            total_time_lable.Text = "Gesamt Zeit: " + track_statistic_infos.total_time;
+            motion_time_lable.Text = "Zeit in Bewegung: " + track_statistic_infos.motion_time;
+            max_ele_lable.Text = "Maximale Höhe: " + track_statistic_infos.max_ele;
+            min_ele_lable.Text = "Minimale Höhe: " + track_statistic_infos.min_ele;
+            max_speed_lable.Text = "Maximale Geschwindigkeit: " + track_statistic_infos.max_speed.ToString() + "m/s = " + (track_statistic_infos.max_speed * 3.6).ToString() + "km/h";
+        }
+
+        //Elevation Box Controlls
+
+        private void alt_pictureBox_SizeChanged(object sender, EventArgs e)
+        {
+            draw_elevation(pt_list);
+        }
+        //-------------------------------------------------------------------------------------------------------
 
         //Track Box Controlls
         private void track_box_SizeChanged(object sender, EventArgs e)
@@ -296,14 +341,17 @@ namespace GPXecutor
         //Data Grid View----------------------------------------------------------------------------------------------------------------------------------------------------
         private void dataPointView_RowEnter(object sender, DataGridViewCellEventArgs e)
         {
+            last_player_ele = Convert.ToDouble(dataPointView.Rows[e.RowIndex].Cells[3].Value);
             last_player_lat = Convert.ToDouble(dataPointView.Rows[e.RowIndex].Cells[4].Value);
             last_player_lon = Convert.ToDouble(dataPointView.Rows[e.RowIndex].Cells[5].Value);
-
+            
             mouse_diff.X = 0;
             mouse_diff.Y = 0;
 
             draw_track(pt_list);
             draw_single_point(last_player_lat, last_player_lon);
+
+            draw_elevation(pt_list);
 
             dataPointView.Rows[e.RowIndex].Selected = true;
         }
@@ -335,5 +383,6 @@ namespace GPXecutor
             dataPointView.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             dataPointView.Columns[5].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
         }
+
     }
 }
