@@ -228,6 +228,7 @@ namespace GPXecutor
             max_ele_lable.Text = "Maximale Höhe: " + track_statistic_infos.max_ele;
             min_ele_lable.Text = "Minimale Höhe: " + track_statistic_infos.min_ele;
             max_speed_lable.Text = "Maximale Geschwindigkeit: " + track_statistic_infos.max_speed.ToString() + "m/s = " + (track_statistic_infos.max_speed * 3.6).ToString() + "km/h";
+            mead_speed_label.Text = "Durchschnitts Geschwindigkeit: " + track_statistic_infos.mead_speed.ToString() + "m/s = " + (track_statistic_infos.mead_speed * 3.6).ToString() + "km/h"; ;
         }
 
         //Elevation Box Controlls
@@ -393,6 +394,55 @@ namespace GPXecutor
 
             draw_elevation(pt_list);
             draw_elevation_marker();
+        }
+
+
+        //Filter Test
+        private void filternToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            data_manipulator dm = new data_manipulator();
+
+            double[] lon = new double[dataPointView.Rows.Count];
+            double[] lat = new double[dataPointView.Rows.Count];
+
+            int i = 0;
+            foreach (gpx_master.gpx_trkpt point in pt_list)
+            {
+                lat[i] = point.lat;
+                lon[i] = point.lon;
+
+                i++;
+            }
+
+            lon = dm.trendline_filter(lon, 1);
+            lat = dm.trendline_filter(lat, 1);
+
+            for (int j = 0; j < 6; j++)
+            {
+                dataPointView.Columns[j].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            }
+
+            i = 0;
+            List<gpx_master.gpx_trkpt> temp_list = new List<gpx_master.gpx_trkpt>();
+            foreach (gpx_master.gpx_trkpt point in pt_list)
+            {
+                gpx_master.gpx_trkpt pd = pt_list.Find(x => x.id.Equals(point.id));
+                pd.lat = lat[i];
+                pd.lon = lon[i];
+
+                temp_list.Add(pd);
+
+                dataPointView.Rows[i].Cells[4].Value = lat[i];
+                dataPointView.Rows[i].Cells[5].Value = lon[i];
+
+                i++;
+            }
+
+            after_del_timer.Enabled = true;
+
+            pt_list = temp_list;
+
+            draw_track(pt_list);
         }
 
     }

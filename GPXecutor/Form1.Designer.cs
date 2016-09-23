@@ -49,11 +49,13 @@
             this.centerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.after_del_timer = new System.Windows.Forms.Timer(this.components);
             this.panel2 = new System.Windows.Forms.Panel();
-            this.total_time_lable = new System.Windows.Forms.Label();
-            this.motion_time_lable = new System.Windows.Forms.Label();
-            this.max_ele_lable = new System.Windows.Forms.Label();
-            this.min_ele_lable = new System.Windows.Forms.Label();
             this.max_speed_lable = new System.Windows.Forms.Label();
+            this.min_ele_lable = new System.Windows.Forms.Label();
+            this.max_ele_lable = new System.Windows.Forms.Label();
+            this.motion_time_lable = new System.Windows.Forms.Label();
+            this.total_time_lable = new System.Windows.Forms.Label();
+            this.mead_speed_label = new System.Windows.Forms.Label();
+            this.filternToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataPointView)).BeginInit();
             this.panel1.SuspendLayout();
@@ -100,7 +102,8 @@
             // editToolStripMenuItem
             // 
             this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.zeitToolStripMenuItem});
+            this.zeitToolStripMenuItem,
+            this.filternToolStripMenuItem});
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
             this.editToolStripMenuItem.Size = new System.Drawing.Size(75, 20);
             this.editToolStripMenuItem.Text = "Bearbeiten";
@@ -240,6 +243,7 @@
             // 
             this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel2.Controls.Add(this.mead_speed_label);
             this.panel2.Controls.Add(this.max_speed_lable);
             this.panel2.Controls.Add(this.min_ele_lable);
             this.panel2.Controls.Add(this.max_ele_lable);
@@ -250,35 +254,15 @@
             this.panel2.Size = new System.Drawing.Size(497, 134);
             this.panel2.TabIndex = 3;
             // 
-            // total_time_lable
+            // max_speed_lable
             // 
-            this.total_time_lable.AutoSize = true;
-            this.total_time_lable.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.total_time_lable.Location = new System.Drawing.Point(3, 4);
-            this.total_time_lable.Name = "total_time_lable";
-            this.total_time_lable.Size = new System.Drawing.Size(79, 13);
-            this.total_time_lable.TabIndex = 0;
-            this.total_time_lable.Text = "Gesamt Zeit:";
-            // 
-            // motion_time_lable
-            // 
-            this.motion_time_lable.AutoSize = true;
-            this.motion_time_lable.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.motion_time_lable.Location = new System.Drawing.Point(3, 21);
-            this.motion_time_lable.Name = "motion_time_lable";
-            this.motion_time_lable.Size = new System.Drawing.Size(110, 13);
-            this.motion_time_lable.TabIndex = 1;
-            this.motion_time_lable.Text = "Zeit in Bewegung:";
-            // 
-            // max_ele_lable
-            // 
-            this.max_ele_lable.AutoSize = true;
-            this.max_ele_lable.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.max_ele_lable.Location = new System.Drawing.Point(3, 40);
-            this.max_ele_lable.Name = "max_ele_lable";
-            this.max_ele_lable.Size = new System.Drawing.Size(97, 13);
-            this.max_ele_lable.TabIndex = 2;
-            this.max_ele_lable.Text = "Maximale Höhe:";
+            this.max_speed_lable.AutoSize = true;
+            this.max_speed_lable.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.max_speed_lable.Location = new System.Drawing.Point(3, 77);
+            this.max_speed_lable.Name = "max_speed_lable";
+            this.max_speed_lable.Size = new System.Drawing.Size(160, 13);
+            this.max_speed_lable.TabIndex = 4;
+            this.max_speed_lable.Text = "Maximale Geschwindigkeit:";
             // 
             // min_ele_lable
             // 
@@ -290,15 +274,52 @@
             this.min_ele_lable.TabIndex = 3;
             this.min_ele_lable.Text = "Minimale Höhe:";
             // 
-            // max_speed_lable
+            // max_ele_lable
             // 
-            this.max_speed_lable.AutoSize = true;
-            this.max_speed_lable.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.max_speed_lable.Location = new System.Drawing.Point(3, 77);
-            this.max_speed_lable.Name = "max_speed_lable";
-            this.max_speed_lable.Size = new System.Drawing.Size(160, 13);
-            this.max_speed_lable.TabIndex = 4;
-            this.max_speed_lable.Text = "Maximale Geschwindigkeit:";
+            this.max_ele_lable.AutoSize = true;
+            this.max_ele_lable.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.max_ele_lable.Location = new System.Drawing.Point(3, 40);
+            this.max_ele_lable.Name = "max_ele_lable";
+            this.max_ele_lable.Size = new System.Drawing.Size(97, 13);
+            this.max_ele_lable.TabIndex = 2;
+            this.max_ele_lable.Text = "Maximale Höhe:";
+            // 
+            // motion_time_lable
+            // 
+            this.motion_time_lable.AutoSize = true;
+            this.motion_time_lable.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.motion_time_lable.Location = new System.Drawing.Point(3, 21);
+            this.motion_time_lable.Name = "motion_time_lable";
+            this.motion_time_lable.Size = new System.Drawing.Size(110, 13);
+            this.motion_time_lable.TabIndex = 1;
+            this.motion_time_lable.Text = "Zeit in Bewegung:";
+            // 
+            // total_time_lable
+            // 
+            this.total_time_lable.AutoSize = true;
+            this.total_time_lable.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.total_time_lable.Location = new System.Drawing.Point(3, 4);
+            this.total_time_lable.Name = "total_time_lable";
+            this.total_time_lable.Size = new System.Drawing.Size(79, 13);
+            this.total_time_lable.TabIndex = 0;
+            this.total_time_lable.Text = "Gesamt Zeit:";
+            // 
+            // mead_speed_label
+            // 
+            this.mead_speed_label.AutoSize = true;
+            this.mead_speed_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.mead_speed_label.Location = new System.Drawing.Point(3, 95);
+            this.mead_speed_label.Name = "mead_speed_label";
+            this.mead_speed_label.Size = new System.Drawing.Size(186, 13);
+            this.mead_speed_label.TabIndex = 5;
+            this.mead_speed_label.Text = "Durchschnitts Geschwindigkeit:";
+            // 
+            // filternToolStripMenuItem
+            // 
+            this.filternToolStripMenuItem.Name = "filternToolStripMenuItem";
+            this.filternToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.filternToolStripMenuItem.Text = "Filtern";
+            this.filternToolStripMenuItem.Click += new System.EventHandler(this.filternToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -354,6 +375,8 @@
         private System.Windows.Forms.Label max_ele_lable;
         private System.Windows.Forms.Label max_speed_lable;
         private System.Windows.Forms.Label min_ele_lable;
+        private System.Windows.Forms.Label mead_speed_label;
+        private System.Windows.Forms.ToolStripMenuItem filternToolStripMenuItem;
     }
 }
 

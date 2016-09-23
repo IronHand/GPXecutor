@@ -24,8 +24,9 @@ namespace GPXecutor
             public double max_ele;
             public double min_ele;
             public double max_speed;
+            public double mead_speed;
             public TimeSpan total_time;
-            public TimeSpan motion_time;
+            public TimeSpan motion_time; 
         };
 
         public string last_loaded_gpx_name = "";
@@ -161,6 +162,7 @@ namespace GPXecutor
             stats.max_speed = 0;
             stats.total_time = new TimeSpan();
             stats.motion_time = new TimeSpan();
+            stats.mead_speed = 0;
 
             DateTime last_time = pt_list[0].time;
 
@@ -181,6 +183,8 @@ namespace GPXecutor
                     stats.max_speed = point.speed;
                 }
 
+                stats.mead_speed += point.speed;
+
                 stats.total_time += point.time - last_time;
 
                 if (point.speed > 0)
@@ -190,6 +194,8 @@ namespace GPXecutor
 
                 last_time = point.time;
             }
+
+            stats.mead_speed /= pt_list.Count;
 
             return stats;
         }
