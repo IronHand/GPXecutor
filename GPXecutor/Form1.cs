@@ -445,5 +445,11 @@ namespace GPXecutor
             draw_track(pt_list);
         }
 
+        private void geocachingToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Geocaching geo_form = new Geocaching();
+            geo_form.Show();
+        }
+
     }
 }

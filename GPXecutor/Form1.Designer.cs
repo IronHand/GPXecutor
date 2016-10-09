@@ -35,6 +35,7 @@
             this.speichernToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.zeitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.filternToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dataPointView = new System.Windows.Forms.DataGridView();
             this.point = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.time = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -49,13 +50,14 @@
             this.centerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.after_del_timer = new System.Windows.Forms.Timer(this.components);
             this.panel2 = new System.Windows.Forms.Panel();
+            this.mead_speed_label = new System.Windows.Forms.Label();
             this.max_speed_lable = new System.Windows.Forms.Label();
             this.min_ele_lable = new System.Windows.Forms.Label();
             this.max_ele_lable = new System.Windows.Forms.Label();
             this.motion_time_lable = new System.Windows.Forms.Label();
             this.total_time_lable = new System.Windows.Forms.Label();
-            this.mead_speed_label = new System.Windows.Forms.Label();
-            this.filternToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.werkzeugeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.geocachingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataPointView)).BeginInit();
             this.panel1.SuspendLayout();
@@ -69,7 +71,8 @@
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.dateiToolStripMenuItem,
-            this.editToolStripMenuItem});
+            this.editToolStripMenuItem,
+            this.werkzeugeToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(1008, 24);
@@ -111,9 +114,16 @@
             // zeitToolStripMenuItem
             // 
             this.zeitToolStripMenuItem.Name = "zeitToolStripMenuItem";
-            this.zeitToolStripMenuItem.Size = new System.Drawing.Size(94, 22);
+            this.zeitToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
             this.zeitToolStripMenuItem.Text = "Zeit";
             this.zeitToolStripMenuItem.Click += new System.EventHandler(this.zeitToolStripMenuItem_Click);
+            // 
+            // filternToolStripMenuItem
+            // 
+            this.filternToolStripMenuItem.Name = "filternToolStripMenuItem";
+            this.filternToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
+            this.filternToolStripMenuItem.Text = "Filtern";
+            this.filternToolStripMenuItem.Click += new System.EventHandler(this.filternToolStripMenuItem_Click);
             // 
             // dataPointView
             // 
@@ -254,6 +264,16 @@
             this.panel2.Size = new System.Drawing.Size(497, 134);
             this.panel2.TabIndex = 3;
             // 
+            // mead_speed_label
+            // 
+            this.mead_speed_label.AutoSize = true;
+            this.mead_speed_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.mead_speed_label.Location = new System.Drawing.Point(3, 95);
+            this.mead_speed_label.Name = "mead_speed_label";
+            this.mead_speed_label.Size = new System.Drawing.Size(186, 13);
+            this.mead_speed_label.TabIndex = 5;
+            this.mead_speed_label.Text = "Durchschnitts Geschwindigkeit:";
+            // 
             // max_speed_lable
             // 
             this.max_speed_lable.AutoSize = true;
@@ -304,22 +324,20 @@
             this.total_time_lable.TabIndex = 0;
             this.total_time_lable.Text = "Gesamt Zeit:";
             // 
-            // mead_speed_label
+            // werkzeugeToolStripMenuItem
             // 
-            this.mead_speed_label.AutoSize = true;
-            this.mead_speed_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.mead_speed_label.Location = new System.Drawing.Point(3, 95);
-            this.mead_speed_label.Name = "mead_speed_label";
-            this.mead_speed_label.Size = new System.Drawing.Size(186, 13);
-            this.mead_speed_label.TabIndex = 5;
-            this.mead_speed_label.Text = "Durchschnitts Geschwindigkeit:";
+            this.werkzeugeToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.geocachingToolStripMenuItem});
+            this.werkzeugeToolStripMenuItem.Name = "werkzeugeToolStripMenuItem";
+            this.werkzeugeToolStripMenuItem.Size = new System.Drawing.Size(77, 20);
+            this.werkzeugeToolStripMenuItem.Text = "Werkzeuge";
             // 
-            // filternToolStripMenuItem
+            // geocachingToolStripMenuItem
             // 
-            this.filternToolStripMenuItem.Name = "filternToolStripMenuItem";
-            this.filternToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.filternToolStripMenuItem.Text = "Filtern";
-            this.filternToolStripMenuItem.Click += new System.EventHandler(this.filternToolStripMenuItem_Click);
+            this.geocachingToolStripMenuItem.Name = "geocachingToolStripMenuItem";
+            this.geocachingToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.geocachingToolStripMenuItem.Text = "Geocaching";
+            this.geocachingToolStripMenuItem.Click += new System.EventHandler(this.geocachingToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -377,6 +395,8 @@
         private System.Windows.Forms.Label min_ele_lable;
         private System.Windows.Forms.Label mead_speed_label;
         private System.Windows.Forms.ToolStripMenuItem filternToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem werkzeugeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem geocachingToolStripMenuItem;
     }
 }
 

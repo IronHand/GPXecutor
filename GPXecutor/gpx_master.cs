@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml;
+using System.Web;
 
 namespace GPXecutor
 {
@@ -27,6 +28,26 @@ namespace GPXecutor
             public double mead_speed;
             public TimeSpan total_time;
             public TimeSpan motion_time; 
+        };
+
+        public struct geocash
+        {
+            public string geoID;
+            public string name;
+            public DateTime time;
+            public string type;
+            public double lat;
+            public double lon;
+            public string owner;
+            public string container;
+            public float difficult;
+            public float terrain;
+            public string country;
+            public string state;
+
+            public string short_description;
+            public string long_description;
+            public string hints;
         };
 
         public string last_loaded_gpx_name = "";
@@ -198,6 +219,108 @@ namespace GPXecutor
             stats.mead_speed /= pt_list.Count;
 
             return stats;
+        }
+
+        //Geocach Funktions--------------------------------------------------------------------------------------------------------------
+
+        System.Windows.Forms.WebBrowser wb;
+
+        public double degree_to_decimal(int degrees, double minutes, double seconds)
+        {
+            double output = 0;
+
+            output = degrees + (minutes / 60.0) + (seconds / 3600.0);
+
+            return output;
+        }
+
+        public string decrypt_hint(string crypted_hint)
+        {
+            crypted_hint = crypted_hint.ToLower();
+            char[] buffer = crypted_hint.ToCharArray();
+            char[] ch = "abcdefghijklmnopqrstuvwxyz".ToCharArray();
+            
+            for (int i = 0; i < buffer.Length; i++)
+            {
+                char letter = buffer[i];
+                if (ch.Contains(letter))
+                {
+                    letter = (char)(letter + 13);
+
+                    if (letter > 'z')
+                    {
+                        letter = (char)(letter - 26);
+                    }
+                    else if (letter < 'a')
+                    {
+                        letter = (char)(letter + 26);
+                    }
+                    buffer[i] = letter;
+                }
+            }
+
+            return new string(buffer);
+        }
+
+        public geocash last_parsed_cach = new geocash();
+        public bool site_parsed = false;
+        public void get_chach_from_groundspeak(string url_address, System.Windows.Forms.WebBrowser browser)
+        {
+            wb = browser;
+            wb.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(wb_DocumentCompleted);
+            wb.Navigate(url_address);
+        }
+
+        public void pack_cash(System.Windows.Forms.WebBrowser browser)
+        {
+            try
+            {
+                wb = browser;
+
+                System.Windows.Forms.HtmlElement element;
+
+                element = wb.Document.GetElementById("ctl00_ContentBody_CacheName");
+                last_parsed_cach.name = element.InnerText;
+
+                element = wb.Document.GetElementById("ctl00_ContentBody_CoordInfoLinkControl1_uxCoordInfoCode");
+                last_parsed_cach.geoID = element.InnerText;
+
+                element = wb.Document.GetElementById("uxLatLon");
+                string[] coord_temp = element.InnerText.Split(' ');
+
+                int degree = Convert.ToInt32(coord_temp[1].TrimEnd(new char[] { '°' }));
+                double minutes = Convert.ToDouble(coord_temp[2].Replace('.', ','));
+                int seconds = 0;
+
+                last_parsed_cach.lat = degree_to_decimal(degree, minutes, seconds);
+
+                degree = Convert.ToInt32(coord_temp[4].TrimEnd(new char[] { '°' }));
+                minutes = Convert.ToDouble(coord_temp[5].Replace('.', ','));
+
+                last_parsed_cach.lon = degree_to_decimal(degree, minutes, seconds);
+
+                element = wb.Document.GetElementById("ctl00_ContentBody_ShortDescription");
+                last_parsed_cach.short_description = element.InnerText;
+
+                element = wb.Document.GetElementById("ctl00_ContentBody_LongDescription");
+                last_parsed_cach.long_description = element.InnerText;
+
+                element = wb.Document.GetElementById("div_hint");
+                last_parsed_cach.hints = element.InnerText;
+
+                if (last_parsed_cach.geoID != null)
+                {
+                    site_parsed = true;
+                }
+            }
+            catch
+            {
+            }
+        }
+
+        void wb_DocumentCompleted(object sender, System.Windows.Forms.WebBrowserDocumentCompletedEventArgs e)
+        {
+            
         }
     }
 }
